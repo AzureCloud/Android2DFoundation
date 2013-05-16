@@ -2,7 +2,7 @@ package com.metagx.foundation.HUD;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import com.metagx.foundation.Sprite;
+import com.metagx.foundation.sprite.Sprite;
 
 public abstract class HUDItem extends Sprite {
 

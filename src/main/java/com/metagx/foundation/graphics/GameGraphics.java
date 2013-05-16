@@ -8,7 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.view.MotionEvent;
 import com.metagx.foundation.HUD.HUDPanel;
-import com.metagx.foundation.Sprite;
+import com.metagx.foundation.sprite.Sprite;
 
 public abstract class GameGraphics implements SensorEventListener {
 	protected final List<Sprite> sprites;

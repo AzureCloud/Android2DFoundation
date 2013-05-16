@@ -2,7 +2,7 @@ package com.metagx.foundation;
 
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.util.Log;
+import com.metagx.foundation.sprite.Sprite;
 
 public class Background extends Sprite {
 
@@ -62,5 +62,9 @@ public class Background extends Sprite {
 
         canvas.drawBitmap(sprite, sRectangle, curPos, null);
 	}
-	
+
+    public void handleCollision(Sprite sprite) {
+        //noop
+    }
+
 }

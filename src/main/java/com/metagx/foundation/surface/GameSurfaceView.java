@@ -26,6 +26,26 @@ public class GameSurfaceView extends SurfaceView implements
 		graphics.draw(c, gameTime);
 	}
 
+    public void onResume() {
+        thread.setRunning(true);
+        try {
+            thread.start();
+        }catch(Exception e) {
+
+        }
+    }
+
+    public void onPause() {
+        boolean retry = true;
+        thread.setRunning(false);
+        while (retry) {
+            try {
+                thread.join();
+                retry = false;
+            } catch (InterruptedException e) {
+            }
+        }
+    }
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -36,25 +56,12 @@ public class GameSurfaceView extends SurfaceView implements
 	
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		thread.setRunning(true);
-		try {
-			thread.start();
-		}catch(Exception e) {
-			
-		}
+        onResume();
 	}
 	
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		boolean retry = true;
-		thread.setRunning(false);
-		while (retry) {
-			try {
-				thread.join();
-				retry = false;
-			} catch (InterruptedException e) {
-			}
-		}
+        onPause();
 	}
 
 }

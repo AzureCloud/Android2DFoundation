@@ -1,4 +1,4 @@
-package com.metagx.foundation;
+package com.metagx.foundation.sprite;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -8,7 +8,6 @@ import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Abstract class for making a Sprite
@@ -106,7 +105,7 @@ public abstract class Sprite {
 	}
 	
 	public abstract void draw(Canvas c);
-	
+
 	public void init(Bitmap theBitmap, int theFPS) {
 		init(theBitmap, theFPS, theBitmap.getWidth(), theBitmap.getHeight());
 	}
