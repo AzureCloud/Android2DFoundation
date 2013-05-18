@@ -16,7 +16,8 @@ public abstract class Sprite {
     private static final String TAG = Sprite.class.getSimpleName();
 
 	protected Bitmap sprite;
-	protected int xPos, yPos, fps, currentFrame;
+	protected float xPos, yPos;
+    protected int fps, currentFrame;
 	protected float spriteHeight, spriteWidth;
 	protected Rect sRectangle;
 	protected long frameTimer;
@@ -135,19 +136,19 @@ public abstract class Sprite {
         }
     }
 
-	public int getYPos() {
+	public float getYPos() {
 		return yPos;
 	}
 
-	public int getXPos() {
+	public float getXPos() {
 		return xPos;
 	}
 	
-	public void setX(int x) {
+	public void setX(float x) {
 		xPos = x;
 	}
 
-	public void setY(int y) {
+	public void setY(float y) {
 		yPos = y;
 	}
 	

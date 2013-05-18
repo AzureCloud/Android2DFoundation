@@ -2,6 +2,8 @@ package com.metagx.foundation.graphics;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -14,6 +16,8 @@ public abstract class GameGraphics implements SensorEventListener {
 	protected final List<Sprite> sprites;
 	protected final List<HUDPanel> hudPanels;
 
+    protected int screenWidth=0,screenHeight=0;
+
 	public GameGraphics() {
         sprites = new ArrayList<Sprite>();
 		hudPanels = new ArrayList<HUDPanel>();
@@ -22,7 +26,12 @@ public abstract class GameGraphics implements SensorEventListener {
 	public abstract boolean onTouchEvent(MotionEvent e);
 	
 	public abstract void draw(Canvas c, long gameTime);
-	
+
+    public void setNewSurfaceSize(Resources resrouces, int screenWidth, int screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+    }
+
 	public synchronized void addGameObject(Sprite obj) {
         sprites.add(obj);
 	}

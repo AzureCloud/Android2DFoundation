@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class MotionSprite extends Sprite {
     protected final int screenWidth, screenHeight;
 
-    protected int speedX = 5, speedY = 5;
+    protected float speedX = 5.2f, speedY = 5.2f;
 
     public MotionSprite(int screenWidth, int screenHeight) {
         this.screenHeight = screenHeight;
@@ -43,11 +43,11 @@ public abstract class MotionSprite extends Sprite {
         canvas.drawBitmap(sprite, sRectangle, curPos, null);
     }
 
-    public void setSpeedX(int speedX) {
+    public void setSpeedX(float speedX) {
         this.speedX = speedX;
     }
 
-    public void setSpeedY(int speedY) {
+    public void setSpeedY(float speedY) {
         this.speedY = speedY;
     }
 }
