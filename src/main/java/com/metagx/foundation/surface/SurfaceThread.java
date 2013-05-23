@@ -25,8 +25,6 @@ public class SurfaceThread extends Thread {
 		@Override
 		public void run() {
             long sleepTime = 0;
-            Paint paint = new Paint();
-            paint.setARGB(255,255,0,0);
             while (myThreadRun) {
 				Canvas c = null;
 				try {
@@ -35,8 +33,7 @@ public class SurfaceThread extends Thread {
 					synchronized (myThreadSurfaceHolder) {
 						myThreadSurfaceView.draw(c);
 					}
-                    sleepTime = 10 - (SystemClock.uptimeMillis()-sleepTime); //Sleep for the remainder to ensure 60fps callback
-                    Log.e("SLEEP_TIME", "Sleep Time: " + sleepTime);
+                    sleepTime = 10 - (SystemClock.uptimeMillis()-sleepTime); //Sleep for the remainder
 					SystemClock.sleep(sleepTime > 0 ? sleepTime : 0); // `~60 fps
 				} finally {
 					if (c != null) {
