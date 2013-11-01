@@ -10,16 +10,17 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.view.MotionEvent;
 import com.metagx.foundation.HUD.HUDPanel;
+import com.metagx.foundation.sprite.MotionSprite;
 import com.metagx.foundation.sprite.Sprite;
 
 public abstract class GameGraphics implements SensorEventListener {
-	protected final List<Sprite> sprites;
+	protected final List<MotionSprite> sprites;
 	protected final List<HUDPanel> hudPanels;
 
     protected int screenWidth=0,screenHeight=0;
 
 	public GameGraphics() {
-        sprites = new ArrayList<Sprite>();
+        sprites = new ArrayList<MotionSprite>();
 		hudPanels = new ArrayList<HUDPanel>();
 	}
 	
@@ -32,11 +33,11 @@ public abstract class GameGraphics implements SensorEventListener {
         this.screenHeight = screenHeight;
     }
 
-	public synchronized void addGameObject(Sprite obj) {
+	public synchronized void addGameObject(MotionSprite obj) {
         sprites.add(obj);
 	}
 
-	public synchronized void removeGameObject(Sprite obj) {
+	public synchronized void removeGameObject(MotionSprite obj) {
         sprites.remove(obj);
 	}
 	

@@ -9,10 +9,10 @@ import android.view.SurfaceView;
 public class GameSurfaceView extends SurfaceView implements
 	SurfaceHolder.Callback {
 
-	final private SurfaceThread thread;
+	private SurfaceThread thread;
 	final private GameGraphics graphics;
 	private long gameTime = 0;
-	
+
 	public GameSurfaceView(Context context, GameGraphics graphics) {
 		super(context);
 
@@ -23,12 +23,16 @@ public class GameSurfaceView extends SurfaceView implements
 
 	@Override
 	public void draw(Canvas c) {
-		graphics.draw(c, gameTime);
+        graphics.draw(c, gameTime);
 	}
 
     public void onResume() {
+        //thread = new SurfaceThread(getHolder(), this);
         thread.setRunning(true);
         try {
+            synchronized (thread) {
+                thread.notifyAll();
+            }
             thread.start();
         }catch(Exception e) {
 
@@ -37,14 +41,15 @@ public class GameSurfaceView extends SurfaceView implements
 
     public void onPause() {
         boolean retry = true;
-        thread.setRunning(false);
-        while (retry) {
-            try {
-                thread.join();
-                retry = false;
-            } catch (InterruptedException e) {
-            }
-        }
+        //thread.setRunning(false);
+//        while (retry) {
+//            try {
+//                thread.join();
+//                retry = false;
+//            } catch (InterruptedException e) {
+//            }
+//        }
+        thread.goToSleep();
     }
 
 	@Override

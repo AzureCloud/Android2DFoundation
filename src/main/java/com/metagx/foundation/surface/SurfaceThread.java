@@ -8,7 +8,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class SurfaceThread extends Thread {
-		private SurfaceHolder myThreadSurfaceHolder;
+    private static final String TAG = SurfaceThread.class.getSimpleName();
+
+    private SurfaceHolder myThreadSurfaceHolder;
 		private SurfaceView myThreadSurfaceView;
 		private boolean myThreadRun = false;
 		
@@ -22,10 +24,27 @@ public class SurfaceThread extends Thread {
 			myThreadRun = b;
 		}
 
+        boolean sleep = false;
+
+        public synchronized void goToSleep() {
+            sleep = true;
+        }
+
 		@Override
 		public void run() {
             long sleepTime = 0;
+            int countMissedFrames = 0;
             while (myThreadRun) {
+                synchronized (this) {
+                    try {
+                        if(sleep == true) {
+                            this.wait();
+                            sleep = false;
+                        }
+                    } catch (InterruptedException e) {
+                        Log.d(TAG, "Interrupted while sleeping");
+                    }
+                }
 				Canvas c = null;
 				try {
 					c = myThreadSurfaceHolder.lockCanvas(null);
