@@ -7,16 +7,8 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public abstract class Screen2D extends Screen {
 
-    protected int screenWidth = -1;
-    protected int screenHeight = -1;
-
     public Screen2D(Game game, int glWidth, int glHeight) {
         super(game, glWidth, glHeight);
-    }
-
-    public void setScreenBounds(int width, int height) {
-        this.screenWidth = width;
-        this.screenHeight = height;
     }
 
     @Override

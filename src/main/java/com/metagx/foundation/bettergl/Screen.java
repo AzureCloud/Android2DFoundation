@@ -5,13 +5,27 @@ public abstract class Screen {
 
     protected final int glWidth, glHeight;
 
+    protected int screenWidth = -1;
+    protected int screenHeight = -1;
+
     public Screen(Game game, int glWidth, int glHeight) {
         this.game = game;
         this.glWidth = glWidth;
         this.glHeight = glHeight;
     }
 
-    public abstract void setScreenBounds(int width, int height);
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
+    public void setScreenBounds(int width, int height) {
+        this.screenWidth = width;
+        this.screenHeight = height;
+    }
 
     public abstract void update(float deltaTime);
 

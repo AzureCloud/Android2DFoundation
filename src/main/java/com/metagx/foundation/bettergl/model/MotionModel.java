@@ -2,6 +2,9 @@ package com.metagx.foundation.bettergl.model;
 
 import android.graphics.RectF;
 
+import com.metagx.foundation.math.Rectangle;
+import com.metagx.foundation.math.Vector;
+
 import java.util.Random;
 
 /**
@@ -10,24 +13,38 @@ import java.util.Random;
 public class MotionModel {
     private static final Random rand = new Random();
 
+    public static final float DEFAULT_MIN_SPEED = 160.0f;
+
     //Position
-    public float x, y;
+    public Vector position = new Vector();
 
     //Speed
-    private float vX, vY;
+    public Vector velocity = new Vector();
+
+    public Vector acceleration = new Vector(0,0);
+
+    protected float minimumSpeed = DEFAULT_MIN_SPEED;
+
+    public float scaleX = 1, scaleY = 1;
 
     //Size
-    public int width, height;
+    public volatile int width, height;
 
     //World Bounds
-    private float glWorldWidth;
-    private float glWorldHeight;
+    protected float glWorldWidth;
+    protected float glWorldHeight;
+
+    protected float scaledWidth;
+    protected float scaledHeight;
 
     //Bounds
-    public RectF bounds = new RectF();
+    public Rectangle bounds;
+//    public RectF bounds = new RectF();
+
+    private Integer lastCollisionId = -1;
 
     //Movement
-    private boolean randomMovement = false;
+    protected boolean randomMovement = false;
 
     public MotionModel(int glWorldWidth, int glWorldHeight, int width, int height) {
         this.glWorldWidth = glWorldWidth;
@@ -36,8 +53,12 @@ public class MotionModel {
         this.width = width;
         this.height = height;
 
-        x = rand.nextFloat() * glWorldWidth;
-        y = rand.nextFloat() * glWorldHeight;
+        this.scaledWidth = width;
+        this.scaledHeight = height;
+
+        position.set(rand.nextFloat() * glWorldWidth, rand.nextFloat() * glWorldHeight);
+
+        this.bounds = new Rectangle(position.x-width/2, position.y-height/2, width, height);
     }
 
     public MotionModel(int glWorldWidth, int glWorldHeight, int width, int height, float vX, float vY) {
@@ -47,47 +68,106 @@ public class MotionModel {
         this.width = width;
         this.height = height;
 
-        this.vX = vX;
-        this.vY = vY;
+        velocity.set(vX, vY);
+    }
+
+    public void collideWith(Vector velocity, int lastCollisionId) {
+        getVelocity().set(velocity);
+        this.lastCollisionId = lastCollisionId;
+    }
+
+    public boolean wasLastCollisionWith(int id, int otherLastCollisionId) {
+        return lastCollisionId != -1 && otherLastCollisionId != -1 && getId() == otherLastCollisionId && lastCollisionId == id;
+    }
+
+    public int getLastCollisionId() {
+        return lastCollisionId;
+    }
+
+    public Integer getId() {
+        return hashCode();
     }
 
     public void setRandomMovement(boolean randomMovement) {
         this.randomMovement = randomMovement;
     }
 
-    public void setSpeedX(float vX) {
-        this.vX = vX;
+    public Vector getVelocity() {
+        return velocity;
     }
 
-    public void setSpeedY(float vY) {
-        this.vY = vY;
-    }
-
-    public void setSpeed(float vX, float vY) {
-        this.vX = vX;
-        this.vY = vY;
+    public Vector getPosition() {
+        return position;
     }
 
     public void update(float deltaTime) {
-        x = x + vX * deltaTime;
-        y = y + vY * deltaTime;
+        position.add(velocity.x*deltaTime, velocity.y*deltaTime);
 
-        if (x < 0) {
-            vX = -vX ;
-            x = 0;
-        } else if (x > glWorldWidth) {
-            vX = -vX;
-            x = glWorldWidth;
+        velocity.add(acceleration);
+
+        bounds.lowerLeft.set(position).sub(bounds.width / 2, bounds.height / 2);
+
+        boolean hitWall = false;
+
+        if (position.x < scaledWidth/2) {
+            velocity.x = velocity.x*-1;
+            position.x = scaledWidth/2;
+            hitWall = true;
+        } else if (position.x > glWorldWidth-scaledWidth/2) {
+            velocity.x = velocity.x*-1;
+            position.x = glWorldWidth-scaledWidth/2;
+            hitWall = true;
         }
 
-        if (y < 0) {
-            vY = -vY;
-            y = 0;
-        } else if (y > glWorldHeight) {
-            vY = -vY;
-            y = glWorldHeight;
+        if (position.y < scaledHeight/2) {
+            velocity.y = velocity.y*-1;
+            position.y = scaledHeight/2;
+            hitWall = true;
+        } else if (position.y > glWorldHeight-scaledHeight/2) {
+            velocity.y = velocity.y*-1;
+            position.y = glWorldHeight-scaledHeight/2;
+            hitWall = true;
         }
 
-        bounds.set(x,y,x+width,y+height);
+        if(hitWall) {
+            lastCollisionId = -1;
+        }
+
+//        if(hitWall) {
+//            vX = vX/2;
+//            if(vX < minimumSpeed && vX > 0) {
+//                vX = minimumSpeed;
+//            } else if(vX > -minimumSpeed && vX < 0) {
+//                vX = -minimumSpeed;
+//            }
+//
+//            vY = vY/2;
+//            if(vY < minimumSpeed && vY > 0) {
+//                vY = minimumSpeed;
+//            } else if(vY > -minimumSpeed && vY < 0) {
+//                vY = -minimumSpeed;
+//            }
+//        }
+
+//        bounds.set(x, (y+height*scaleY),x+width*scaleX, y);
+    }
+
+    public void setScale(float scaleX, float scaleY) {
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+
+        this.scaledWidth = width * scaleX;
+        this.scaledHeight = height * scaleY;
+    }
+
+    public void setMinimumSpeed() {
+        this.minimumSpeed = 10;
+    }
+
+    public void moveTowardsPoint(Vector touchPoint) {
+        float xDir = touchPoint.x<position.x?-1:1;
+        float yDir = touchPoint.y<position.y?-1:1;
+
+        velocity.set(Math.abs(velocity.x)*xDir, Math.abs(velocity.y)*yDir);
     }
 }
