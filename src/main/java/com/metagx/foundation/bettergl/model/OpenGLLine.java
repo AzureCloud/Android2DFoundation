@@ -4,6 +4,7 @@ import com.metagx.foundation.bettergl.BindableVertices;
 import com.metagx.foundation.bettergl.GLGame;
 import com.metagx.foundation.bettergl.GLGraphics;
 import com.metagx.foundation.bettergl.model.OpenGLObject;
+import com.metagx.foundation.bettergl.model.area.Area;
 import com.metagx.foundation.exception.SuperClassDidNotImplementException;
 
 import java.nio.ByteBuffer;
@@ -19,12 +20,16 @@ import javax.microedition.khronos.opengles.GL10;
 public abstract class OpenGLLine extends OpenGLObject {
     protected final float lineWidth;
 
-    protected MotionModel motionModel;
+    public Area area; //TODO make wunpublic
 
-    public OpenGLLine(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int x, int y, float lineWidth) {
+    protected MotionModel motionModel;
+    private LineType lineType;
+
+    public OpenGLLine(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int x, int y, float lineWidth, Area area) {
         super(glGame, glGraphics, glWorldWidth, glWorldHeight, 10, (int) lineWidth);
         this.lineWidth = lineWidth;
         this.motionModel.position.set(x,y);
+        this.area = area;
         updateVerticies();
     }
 
@@ -74,4 +79,6 @@ public abstract class OpenGLLine extends OpenGLObject {
         bindableVertices = new BindableVertices(glGraphics, 2, 0, true, hasTexture());
         updateVerticies();
     }
+
+    public abstract LineType getLineType();
 }

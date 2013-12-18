@@ -1,5 +1,7 @@
 package com.metagx.foundation.bettergl;
 
+import android.view.MotionEvent;
+
 public abstract class Screen {
     protected final Game game;
 
@@ -26,6 +28,9 @@ public abstract class Screen {
         this.screenWidth = width;
         this.screenHeight = height;
     }
+
+
+    public abstract boolean onMotionEvent(MotionEvent e);
 
     public abstract void update(float deltaTime);
 

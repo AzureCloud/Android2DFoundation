@@ -13,6 +13,8 @@ public class OpenGLObjectFactory {
     protected GLGraphics glGraphics;
     protected int glWidth, glHeight;
 
+    protected int screenWidth, screenHeight;
+
     public OpenGLObjectFactory(GLGame game, GLGraphics glGraphics, int glWidth, int glHeight) {
         this.game = game;
         this.glGraphics = glGraphics;
@@ -37,5 +39,10 @@ public class OpenGLObjectFactory {
                 setupTextureVerticies();
             }
         };
+    }
+
+    public void setScreenSize(int screenWidth, int screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
     }
 }

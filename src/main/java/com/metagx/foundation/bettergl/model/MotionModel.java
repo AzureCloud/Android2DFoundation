@@ -39,12 +39,8 @@ public class MotionModel {
 
     //Bounds
     public Rectangle bounds;
-//    public RectF bounds = new RectF();
 
     private Integer lastCollisionId = -1;
-
-    //Movement
-    protected boolean randomMovement = false;
 
     public MotionModel(int glWorldWidth, int glWorldHeight, int width, int height) {
         this.glWorldWidth = glWorldWidth;
@@ -62,12 +58,7 @@ public class MotionModel {
     }
 
     public MotionModel(int glWorldWidth, int glWorldHeight, int width, int height, float vX, float vY) {
-        this.glWorldWidth = glWorldWidth;
-        this.glWorldHeight = glWorldHeight;
-
-        this.width = width;
-        this.height = height;
-
+        this(glWorldWidth, glWorldHeight, width, height);
         velocity.set(vX, vY);
     }
 
@@ -86,10 +77,6 @@ public class MotionModel {
 
     public Integer getId() {
         return hashCode();
-    }
-
-    public void setRandomMovement(boolean randomMovement) {
-        this.randomMovement = randomMovement;
     }
 
     public Vector getVelocity() {

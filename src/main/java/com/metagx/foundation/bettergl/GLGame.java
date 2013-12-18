@@ -90,6 +90,11 @@ public abstract class GLGame extends Activity implements Game, Renderer {
     }
 
     @Override
+    public void runOnMainThread(Runnable runnable) {
+        runOnUiThread(runnable);
+    }
+
+    @Override
     public void onDrawFrame(GL10 gl) {                
         GLGameState state = null;
         

@@ -1,5 +1,7 @@
 package com.metagx.foundation.bettergl.model;
 
+import android.os.SystemClock;
+
 import com.metagx.foundation.bettergl.BindableVertices;
 import com.metagx.foundation.bettergl.GLGame;
 import com.metagx.foundation.bettergl.GLGraphics;
@@ -9,6 +11,7 @@ import com.metagx.foundation.exception.SuperClassDidNotImplementException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -18,21 +21,33 @@ import javax.microedition.khronos.opengles.GL10;
 public abstract class OpenGLObject {
 
     protected BindableVertices bindableVertices;
-    protected final Texture texture;
+    protected Texture texture;
 
-    protected final List<MotionModel> motionModelList;
+    protected List<MotionModel> motionModelList;
 
-    protected final GLGraphics glGraphics;
+    protected GLGraphics glGraphics;
+
+    protected GLGame glGame;
 
     protected int glWorldWidth, glWorldHeight, width, height;
 
-    private final String assetPath;
+    private String assetPath;
+
+    private final Random r = new Random();
+
+    protected OpenGLObject() {
+
+    }
 
     public OpenGLObject(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height) {
         this(glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, null);
     }
 
     public OpenGLObject(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath) {
+        init(glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath);
+    }
+
+    protected void init(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath) {
         this.assetPath = assetPath;
 
         if(hasTexture()) {
@@ -46,12 +61,14 @@ public abstract class OpenGLObject {
         this.width = width;
         this.height = height;
 
+        this.glGame = glGame;
+
         this.glGraphics = glGraphics;
 
         setBindableVertices();
 
         motionModelList = new ArrayList<MotionModel>();
-    }
+    };
 
     public Texture getTexture() {
         return texture;
@@ -99,6 +116,12 @@ public abstract class OpenGLObject {
         MotionModel motionModel = new MotionModel(glWorldWidth, glWorldHeight, width, height);
         motionModelList.add(motionModel);
         return motionModel;
+    }
+
+    public MotionModel addObjectRandomVelocity() {
+        MotionModel model = addObject();
+        model.getVelocity().set(((r.nextInt(111)%3==0)?-1:1) * 125 + (r.nextInt(222)*17)%50, ((r.nextInt(333)%2==0)?-1:1) * 100 + (r.nextInt(444)*17)%50);
+        return model;
     }
 
     public List<MotionModel> getMotionModelList() {
