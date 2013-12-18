@@ -38,14 +38,19 @@ public abstract class GLGame extends Activity implements Game, Renderer {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        glView = new GLSurfaceView(this);
-        glView.setRenderer(this);
-        setContentView(glView);
+
+        setupContentView();
         
         glGraphics = new GLGraphics(glView);
         fileIO = new AndroidFileIO(getAssets());
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");        
+    }
+
+    protected void setupContentView() {
+        glView = new GLSurfaceView(this);
+        glView.setRenderer(this);
+        setContentView(glView);
     }
 
     public void onResume() {
