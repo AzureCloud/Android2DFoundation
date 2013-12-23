@@ -18,7 +18,7 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by Adam on 12/10/13.
  */
-public abstract class OpenGLObject {
+public class OpenGLObject {
 
     protected BindableVertices bindableVertices;
     protected Texture texture;
@@ -31,7 +31,7 @@ public abstract class OpenGLObject {
 
     protected int glWorldWidth, glWorldHeight, width, height;
 
-    private String assetPath;
+    private volatile String assetPath;
 
     private final Random r = new Random();
 
@@ -120,7 +120,20 @@ public abstract class OpenGLObject {
 
     public MotionModel addObjectRandomVelocity() {
         MotionModel model = addObject();
-        model.getVelocity().set(((r.nextInt(111)%3==0)?-1:1) * 125 + (r.nextInt(222)*17)%50, ((r.nextInt(333)%2==0)?-1:1) * 100 + (r.nextInt(444)*17)%50);
+        float vx = ((r.nextInt(111)%3==0)?-1:1) * 125 + (r.nextInt(222)*17)%50;
+        float vy = ((r.nextInt(333)%2==0)?-1:1) * 100 + (r.nextInt(444)*17)%50;
+        if(vx >= width) {
+            vx = width-1;
+        } else if(vx <= -32) {
+            vx = -width+1;
+        }
+        if(vx >= height) {
+            vy = height-1;
+        } else if(vx <= -height) {
+            vy = -height+1;
+        }
+
+        model.getVelocity().set(vx, vy);
         return model;
     }
 

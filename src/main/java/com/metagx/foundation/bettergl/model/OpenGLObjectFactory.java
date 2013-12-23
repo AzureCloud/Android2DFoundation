@@ -23,20 +23,19 @@ public class OpenGLObjectFactory {
     };
 
     public OpenGLObject createObject(final String assetPath, int width, int height) {
-        return new OpenGLObject(game, glGraphics, glWidth, glHeight, width, height) {
-            @Override
-            public String getAssetPath() {
-                return assetPath;
-            }
+        return new OpenGLObject(game, glGraphics, glWidth, glHeight, width, height, assetPath) {
 
             @Override
-            public boolean hasTexture() {
-                return true;
-            }
+            public MotionModel addObject() {
+                MotionModel motionModel = new MotionModel(glWorldWidth, glWorldHeight, width, height) {
+                    @Override
+                    public void update(float delta) {
+                        //noop
+                    }
+                };
 
-            @Override
-            public void setBindableVertices() {
-                setupTextureVerticies();
+                motionModelList.add(motionModel);
+                return motionModel;
             }
         };
     }

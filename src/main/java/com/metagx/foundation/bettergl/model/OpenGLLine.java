@@ -25,6 +25,8 @@ public abstract class OpenGLLine extends OpenGLObject {
     protected MotionModel motionModel;
     private LineType lineType;
 
+    protected float[] lineVerticies;
+
     public OpenGLLine(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int x, int y, float lineWidth, Area area) {
         super(glGame, glGraphics, glWorldWidth, glWorldHeight, 10, (int) lineWidth);
         this.lineWidth = lineWidth;
@@ -65,9 +67,11 @@ public abstract class OpenGLLine extends OpenGLObject {
     }
 
     public void updateVerticies() {
-        bindableVertices.setVertices(new float[] {
-                -motionModel.width/2, 1, 1,0,0,1,
-                motionModel.width/2, 1, 1, 0, 0, 1}, 0, 12);
+        lineVerticies[0] = -motionModel.width/2;
+        lineVerticies[1] = 1;
+        lineVerticies[6] = motionModel.width/2;
+        lineVerticies[7] = 1;
+        bindableVertices.setVertices(lineVerticies, 0, 12);
 
 //        Log.d("Growing", "V: mm.x=" + motionModel.x + " mm.x+width=" + motionModel.x+motionModel.width);
     }
@@ -75,6 +79,10 @@ public abstract class OpenGLLine extends OpenGLObject {
     @Override
     protected void setupCustomVerticies() throws SuperClassDidNotImplementException {
         setMotionModel();
+
+        lineVerticies = new float[] {
+                -motionModel.width/2, 1, 1,0,0,1,
+                motionModel.width/2, 1, 1, 0, 0, 1};
 
         bindableVertices = new BindableVertices(glGraphics, 2, 0, true, hasTexture());
         updateVerticies();

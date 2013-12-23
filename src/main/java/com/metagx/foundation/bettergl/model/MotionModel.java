@@ -40,7 +40,10 @@ public class MotionModel {
     //Bounds
     public Rectangle bounds;
 
-    private Integer lastCollisionId = -1;
+    public static final int UNSET = -1;
+    public static final int IRRELEVANT = -9;
+
+    private Integer lastCollisionId = UNSET;
 
     public MotionModel(int glWorldWidth, int glWorldHeight, int width, int height) {
         this.glWorldWidth = glWorldWidth;
@@ -67,8 +70,21 @@ public class MotionModel {
         this.lastCollisionId = lastCollisionId;
     }
 
+    public void collideWith(int lastCollisionId) {
+        this.lastCollisionId = lastCollisionId;
+    }
+
     public boolean wasLastCollisionWith(int id, int otherLastCollisionId) {
-        return lastCollisionId != -1 && otherLastCollisionId != -1 && getId() == otherLastCollisionId && lastCollisionId == id;
+        int lastCollisionId = getLastCollisionId();
+
+        if(lastCollisionId == IRRELEVANT) {
+            return otherLastCollisionId != UNSET && otherLastCollisionId == getId();
+        } else if(otherLastCollisionId == IRRELEVANT) {
+            return lastCollisionId != UNSET && lastCollisionId == id;
+        } else {
+            return lastCollisionId != UNSET && otherLastCollisionId != UNSET &&
+                getId() == otherLastCollisionId && lastCollisionId == id;
+        }
     }
 
     public int getLastCollisionId() {

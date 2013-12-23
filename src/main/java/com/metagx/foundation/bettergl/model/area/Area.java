@@ -25,15 +25,14 @@ public class Area {
 
     protected boolean isSealed = false;
 
-    public static int static_i = 0;
-    Triple<Float> color;
-    public static final Triple<Float>[] static_colors = new Triple[7];
+//    public static int static_i = 0;
+//    Triple<Float> color;
+//    public static final Triple<Float>[] static_colors = new Triple[7];
 
     private float alpha = 0.0f;
 
-
     private final float alpha_fade_delta = .05f;
-    private final static float MAX_ALPHA = .6f;
+    private final static float MAX_ALPHA = .4f;
 
     public Area(GLGraphics glGraphics, float centerX, float centerY, float width, float height) {
         areaBounds = new Rectangle(centerX-width/2, centerY-height/2, width, height);
@@ -42,16 +41,16 @@ public class Area {
 
         setBindableVertices();
 
-        static_colors[0] = new Triple<Float>(1f,0f,0f);
-        static_colors[1] = new Triple<Float>(0f,1f,0f);
-        static_colors[2] = new Triple<Float>(0f,0f,1f);
-        static_colors[3] = new Triple<Float>(1f,1f,0f);
-        static_colors[4] = new Triple<Float>(0f,1f,1f);
-        static_colors[5] = new Triple<Float>(1f,0f,1f);
-        static_colors[6] = new Triple<Float>(0f,0f,0f);
-
-        color = static_colors[static_i%static_colors.length];
-        static_i++;
+//        static_colors[0] = new Triple<Float>(1f,0f,0f);
+//        static_colors[1] = new Triple<Float>(0f,1f,0f);
+//        static_colors[2] = new Triple<Float>(0f,0f,1f);
+//        static_colors[3] = new Triple<Float>(1f,1f,0f);
+//        static_colors[4] = new Triple<Float>(0f,1f,1f);
+//        static_colors[5] = new Triple<Float>(1f,0f,1f);
+//        static_colors[6] = new Triple<Float>(0f,0f,0f);
+//
+//        color = static_colors[static_i%static_colors.length];
+//        static_i++;
     }
 
     public Rectangle getAreaBounds() {
@@ -70,11 +69,11 @@ public class Area {
         if(bisect.getLineType() == LineType.HORIZONTAL) {
 
             //Horizontal
-            float centerXTop = areaBounds.lowerLeft.x + areaBounds.width/2;
-            float centerYTop = (areaBounds.lowerLeft.y+areaBounds.height+bisect.getMotionModel().getPosition().y)/2;
+            float centerXTop = areaBounds.lowerLeft.x + areaBounds.width/2.0f;
+            float centerYTop = (areaBounds.lowerLeft.y+areaBounds.height+bisect.getMotionModel().getPosition().y)/2.0f + 1;
 
-            float centerXBottom = areaBounds.lowerLeft.x + areaBounds.width/2;
-            float centerYBottom = (areaBounds.lowerLeft.y+bisect.getMotionModel().getPosition().y)/2;
+            float centerXBottom = areaBounds.lowerLeft.x + areaBounds.width/2.0f;
+            float centerYBottom = (areaBounds.lowerLeft.y+bisect.getMotionModel().getPosition().y)/2.0f;
 
             float topHeight = 2*(centerYTop-bisect.getMotionModel().getPosition().y);
             float bottomHeight = 2*(bisect.getMotionModel().getPosition().y - centerYBottom);
@@ -86,7 +85,7 @@ public class Area {
         } else {
             //Vertical
 
-            float centerXRight = (areaBounds.lowerLeft.x+areaBounds.width+bisect.getMotionModel().getPosition().x)/2;
+            float centerXRight = (areaBounds.lowerLeft.x+areaBounds.width+bisect.getMotionModel().getPosition().x)/2 + 1;
             float centerYRight = areaBounds.lowerLeft.y+areaBounds.height/2;
 
             float centerXLeft = (areaBounds.lowerLeft.x+bisect.getMotionModel().getPosition().x)/2;
@@ -116,7 +115,7 @@ public class Area {
 
         alpha = alpha<MAX_ALPHA?alpha+alpha_fade_delta:MAX_ALPHA;
 
-        gl.glColor4f(color.a, color.b, color.c, alpha);
+        gl.glColor4f(1, 0, 0, alpha);
 
         gl.glTranslatef(areaBounds.lowerLeft.x + areaBounds.width / 2, areaBounds.lowerLeft.y + areaBounds.height / 2, 0);
         bindableVertices.draw(GL10.GL_TRIANGLES, 0, 6);
