@@ -7,6 +7,7 @@ import com.metagx.foundation.bettergl.GLGame;
 import com.metagx.foundation.bettergl.GLGraphics;
 import com.metagx.foundation.bettergl.Texture;
 import com.metagx.foundation.bettergl.model.MotionModel;
+import com.metagx.foundation.bettergl.model.area.Area;
 import com.metagx.foundation.exception.SuperClassDidNotImplementException;
 
 import java.util.ArrayList;
@@ -112,14 +113,14 @@ public class OpenGLObject {
         bindableVertices.setIndices(new short[] {0, 1, 2, 2, 3, 0}, 0, 6);
     }
 
-    public MotionModel addObject() {
-        MotionModel motionModel = new MotionModel(glWorldWidth, glWorldHeight, width, height);
+    public MotionModel addObject(Area areaBounds) {
+        MotionModel motionModel = new MotionModel(areaBounds, width, height);
         motionModelList.add(motionModel);
         return motionModel;
     }
 
-    public MotionModel addObjectRandomVelocity() {
-        MotionModel model = addObject();
+    public MotionModel addObjectRandomVelocity(Area areaBounds) {
+        MotionModel model = addObject(areaBounds);
         float vx = ((r.nextInt(111)%3==0)?-1:1) * 125 + (r.nextInt(222)*17)%50;
         float vy = ((r.nextInt(333)%2==0)?-1:1) * 100 + (r.nextInt(444)*17)%50;
         if(vx >= width) {

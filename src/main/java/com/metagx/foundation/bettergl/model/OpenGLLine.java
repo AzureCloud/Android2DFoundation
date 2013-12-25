@@ -43,7 +43,7 @@ public abstract class OpenGLLine extends OpenGLObject {
 
     @Override
     @Deprecated
-    public MotionModel addObject() {
+    public MotionModel addObject(Area areaBounds) {
         throw new UnsupportedOperationException();
     }
 

@@ -3,6 +3,7 @@ package com.metagx.foundation.bettergl.model;
 import com.metagx.foundation.bettergl.GLGame;
 import com.metagx.foundation.bettergl.GLGraphics;
 import com.metagx.foundation.bettergl.model.OpenGLObject;
+import com.metagx.foundation.bettergl.model.area.Area;
 
 /**
  * Created by Adam on 12/10/13.
@@ -26,8 +27,8 @@ public class OpenGLObjectFactory {
         return new OpenGLObject(game, glGraphics, glWidth, glHeight, width, height, assetPath) {
 
             @Override
-            public MotionModel addObject() {
-                MotionModel motionModel = new MotionModel(glWorldWidth, glWorldHeight, width, height) {
+            public MotionModel addObject(Area area) {
+                MotionModel motionModel = new MotionModel(area, width, height) {
                     @Override
                     public void update(float delta) {
                         //noop

@@ -68,8 +68,8 @@ public class AreaTest {
 
         SplitArea areaPair = area.splitArea(mockLine);
 
-        assertRectCompare(expectedAreaTop, areaPair.first.areaBounds);
-        assertRectCompare(expectedAreaBottom, areaPair.second.areaBounds);
+        assertRectCompare(expectedAreaTop, areaPair.leftTop.areaBounds);
+        assertRectCompare(expectedAreaBottom, areaPair.rightBottom.areaBounds);
     }
 
     @Test
@@ -113,12 +113,12 @@ public class AreaTest {
 
         SplitArea areaPair = area.splitArea(mockLine);
 
-        assertRectCompare(expectedAreaTop, areaPair.first.areaBounds);
-        assertRectCompare(expectedAreaBottom, areaPair.second.areaBounds);
+        assertRectCompare(expectedAreaTop, areaPair.leftTop.areaBounds);
+        assertRectCompare(expectedAreaBottom, areaPair.rightBottom.areaBounds);
 
         //2nd split
 
-        Area bottom = areaPair.second;
+        Area bottom = areaPair.rightBottom;
 
         Vector splitPosition2 = new Vector(12, 12);
         when(mockLineMotionModel.getPosition()).thenReturn(splitPosition2);
@@ -140,8 +140,8 @@ public class AreaTest {
         Rectangle expectedPair2Top = new Rectangle(10,12,20,3);
         Rectangle expectedPair2Bottom = new Rectangle(10,10,20,2);
 
-        assertRectCompare(expectedPair2Top, pair2.first.areaBounds);
-        assertRectCompare(expectedPair2Bottom, pair2.second.areaBounds);
+        assertRectCompare(expectedPair2Top, pair2.leftTop.areaBounds);
+        assertRectCompare(expectedPair2Bottom, pair2.rightBottom.areaBounds);
 
     }
 
@@ -188,8 +188,8 @@ public class AreaTest {
 
         SplitArea areaPair = area.splitArea(mockLine);
 
-        assertRectCompare(expectedAreaTop, areaPair.first.areaBounds);
-        assertRectCompare(expectedAreaBottom, areaPair.second.areaBounds);
+        assertRectCompare(expectedAreaTop, areaPair.leftTop.areaBounds);
+        assertRectCompare(expectedAreaBottom, areaPair.rightBottom.areaBounds);
     }
 
     private void assertRectCompare(Rectangle a, Rectangle b) {
