@@ -20,18 +20,14 @@ import javax.microedition.khronos.opengles.GL10;
 public abstract class OpenGLLine extends OpenGLObject {
     protected final float lineWidth;
 
-    public Area area; //TODO make wunpublic
-
     protected MotionModel motionModel;
-    private LineType lineType;
 
     protected float[] lineVerticies;
 
     public OpenGLLine(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int x, int y, float lineWidth, Area area) {
-        super(glGame, glGraphics, glWorldWidth, glWorldHeight, 10, (int) lineWidth);
+        super(glGame, glGraphics, glWorldWidth, glWorldHeight, 10, (int) lineWidth, null, area);
         this.lineWidth = lineWidth;
         this.motionModel.position.set(x,y);
-        this.area = area;
         updateVerticies();
     }
 

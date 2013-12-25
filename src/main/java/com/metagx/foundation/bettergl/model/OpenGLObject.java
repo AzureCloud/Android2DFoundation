@@ -36,20 +36,28 @@ public class OpenGLObject {
 
     private final Random r = new Random();
 
+    public Area area; //TODO make wunpublic
+
     protected OpenGLObject() {
 
     }
 
     public OpenGLObject(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height) {
-        this(glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, null);
+        this(glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, null, null);
     }
 
     public OpenGLObject(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath) {
-        init(glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath);
+        this(glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath, null);
     }
 
-    protected void init(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath) {
+    public OpenGLObject(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath, Area area) {
+        init(glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath, area);
+    }
+
+    protected void init(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath, Area area) {
         this.assetPath = assetPath;
+
+        this.area = area;
 
         if(hasTexture()) {
             this.texture = new Texture(glGame, getAssetPath());
