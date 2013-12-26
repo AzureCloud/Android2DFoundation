@@ -70,7 +70,7 @@ public class Area {
 
             //Horizontal
             float centerXTop = areaBounds.lowerLeft.x + areaBounds.width/2.0f;
-            float centerYTop = (areaBounds.lowerLeft.y+areaBounds.height+bisect.getMotionModel().getPosition().y)/2.0f + 1;
+            float centerYTop = (areaBounds.lowerLeft.y+areaBounds.height+bisect.getMotionModel().getPosition().y)/2.0f;
 
             float centerXBottom = areaBounds.lowerLeft.x + areaBounds.width/2.0f;
             float centerYBottom = (areaBounds.lowerLeft.y+bisect.getMotionModel().getPosition().y)/2.0f;
@@ -85,7 +85,7 @@ public class Area {
         } else {
             //Vertical
 
-            float centerXRight = (areaBounds.lowerLeft.x+areaBounds.width+bisect.getMotionModel().getPosition().x)/2 + 1;
+            float centerXRight = (areaBounds.lowerLeft.x+areaBounds.width+bisect.getMotionModel().getPosition().x)/2;
             float centerYRight = areaBounds.lowerLeft.y+areaBounds.height/2;
 
             float centerXLeft = (areaBounds.lowerLeft.x+bisect.getMotionModel().getPosition().x)/2;

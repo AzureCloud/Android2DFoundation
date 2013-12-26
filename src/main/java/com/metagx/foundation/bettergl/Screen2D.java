@@ -7,7 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public abstract class Screen2D extends Screen {
 
-    public Screen2D(Game game, int glWidth, int glHeight) {
+    public Screen2D(GLGame game, int glWidth, int glHeight) {
         super(game, glWidth, glHeight);
     }
 

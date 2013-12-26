@@ -55,7 +55,7 @@ public abstract class OpenGLLine extends OpenGLObject {
         gl.glDisable(GL10.GL_TEXTURE_2D);
         bindableVertices.bind();
         gl.glLoadIdentity();
-        gl.glLineWidth(height);
+        gl.glLineWidth(3f);
         gl.glTranslatef(motionModel.position.x, motionModel.position.y, 0);
         gl.glScalef(motionModel.scaleX, motionModel.scaleY, 0);
         bindableVertices.draw(GL10.GL_LINES, 0, 2);
@@ -64,9 +64,9 @@ public abstract class OpenGLLine extends OpenGLObject {
 
     public void updateVerticies() {
         lineVerticies[0] = -motionModel.width/2;
-        lineVerticies[1] = 1;
+        lineVerticies[1] = 0f;
         lineVerticies[6] = motionModel.width/2;
-        lineVerticies[7] = 1;
+        lineVerticies[7] = 0f;
         bindableVertices.setVertices(lineVerticies, 0, 12);
 
 //        Log.d("Growing", "V: mm.x=" + motionModel.x + " mm.x+width=" + motionModel.x+motionModel.width);

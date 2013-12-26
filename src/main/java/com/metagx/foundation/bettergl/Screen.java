@@ -3,14 +3,14 @@ package com.metagx.foundation.bettergl;
 import android.view.MotionEvent;
 
 public abstract class Screen {
-    protected final Game game;
+    protected final GLGame game;
 
     protected final int glWidth, glHeight;
 
     protected int screenWidth = -1;
     protected int screenHeight = -1;
 
-    public Screen(Game game, int glWidth, int glHeight) {
+    public Screen(GLGame game, int glWidth, int glHeight) {
         this.game = game;
         this.glWidth = glWidth;
         this.glHeight = glHeight;
