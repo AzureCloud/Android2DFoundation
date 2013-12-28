@@ -115,7 +115,7 @@ public class Area {
 
         alpha = alpha<MAX_ALPHA?alpha+alpha_fade_delta:MAX_ALPHA;
 
-        gl.glColor4f(1, 0, 0, alpha);
+        gl.glColor4f(.48f, .48f, .48f, alpha);
 
         gl.glTranslatef(areaBounds.lowerLeft.x + areaBounds.width / 2, areaBounds.lowerLeft.y + areaBounds.height / 2, 0);
         bindableVertices.draw(GL10.GL_TRIANGLES, 0, 6);

@@ -25,7 +25,7 @@ public abstract class OpenGLLine extends OpenGLObject {
     protected float[] lineVerticies;
 
     public OpenGLLine(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int x, int y, float lineWidth, Area area) {
-        super(glGame, glGraphics, glWorldWidth, glWorldHeight, 10, (int) lineWidth, null, area);
+        super(glGame, glGraphics, glWorldWidth, glWorldHeight, 1, (int) lineWidth, null, area);
         this.lineWidth = lineWidth;
         this.motionModel.position.set(x,y);
         updateVerticies();
@@ -55,7 +55,7 @@ public abstract class OpenGLLine extends OpenGLObject {
         gl.glDisable(GL10.GL_TEXTURE_2D);
         bindableVertices.bind();
         gl.glLoadIdentity();
-        gl.glLineWidth(3f);
+        gl.glLineWidth(lineWidth);
         gl.glTranslatef(motionModel.position.x, motionModel.position.y, 0);
         gl.glScalef(motionModel.scaleX, motionModel.scaleY, 0);
         bindableVertices.draw(GL10.GL_LINES, 0, 2);
@@ -77,8 +77,8 @@ public abstract class OpenGLLine extends OpenGLObject {
         setMotionModel();
 
         lineVerticies = new float[] {
-                -motionModel.width/2, 1, 1,0,0,1,
-                motionModel.width/2, 1, 1, 0, 0, 1};
+                -motionModel.width/2, 1, 0,0,0,1,
+                motionModel.width/2, 1, 0,0,0,1};
 
         bindableVertices = new BindableVertices(glGraphics, 2, 0, true, hasTexture());
         updateVerticies();
