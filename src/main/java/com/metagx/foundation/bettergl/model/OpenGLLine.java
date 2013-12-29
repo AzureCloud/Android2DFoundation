@@ -24,6 +24,10 @@ public abstract class OpenGLLine extends OpenGLObject {
 
     protected float[] lineVerticies;
 
+    public float alpha = 1f;
+
+    protected boolean fade = false;
+
     public OpenGLLine(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int x, int y, float lineWidth, Area area) {
         super(glGame, glGraphics, glWorldWidth, glWorldHeight, 1, (int) lineWidth, null, area);
         this.lineWidth = lineWidth;
@@ -43,6 +47,10 @@ public abstract class OpenGLLine extends OpenGLObject {
         throw new UnsupportedOperationException();
     }
 
+    public void setFading(boolean fading) {
+        this.fade = fading;
+    }
+
     @Override
     @Deprecated
     public List<MotionModel> getMotionModelList() {
@@ -51,22 +59,29 @@ public abstract class OpenGLLine extends OpenGLObject {
 
     @Override
     public void draw() {
+        if(fade) {
+            alpha -= .05f;
+        }
         GL10 gl = glGraphics.getGL();
         gl.glDisable(GL10.GL_TEXTURE_2D);
         bindableVertices.bind();
         gl.glLoadIdentity();
         gl.glLineWidth(lineWidth);
+        gl.glColor4f(0,0,0,alpha);
         gl.glTranslatef(motionModel.position.x, motionModel.position.y, 0);
         gl.glScalef(motionModel.scaleX, motionModel.scaleY, 0);
         bindableVertices.draw(GL10.GL_LINES, 0, 2);
+        gl.glColor4f(1, 1, 1, 1f);
         bindableVertices.unbind();
     }
 
     public void updateVerticies() {
         lineVerticies[0] = -motionModel.width/2;
         lineVerticies[1] = 0f;
+        lineVerticies[5] = alpha;
         lineVerticies[6] = motionModel.width/2;
         lineVerticies[7] = 0f;
+        lineVerticies[11] = alpha;
         bindableVertices.setVertices(lineVerticies, 0, 12);
 
 //        Log.d("Growing", "V: mm.x=" + motionModel.x + " mm.x+width=" + motionModel.x+motionModel.width);
@@ -77,8 +92,8 @@ public abstract class OpenGLLine extends OpenGLObject {
         setMotionModel();
 
         lineVerticies = new float[] {
-                -motionModel.width/2, 1, 0,0,0,1,
-                motionModel.width/2, 1, 0,0,0,1};
+                -motionModel.width/2, 1, 0, 0, 0, alpha,
+                motionModel.width/2, 1, 0, 0, 0, alpha};
 
         bindableVertices = new BindableVertices(glGraphics, 2, 0, true, hasTexture());
         updateVerticies();
