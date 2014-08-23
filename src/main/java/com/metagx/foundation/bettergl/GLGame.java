@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -181,7 +182,10 @@ public abstract class GLGame extends Activity implements Game, Renderer {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        return super.onTouchEvent(e);
+    public boolean onTouchEvent(MotionEvent event) {
+        if(getCurrentScreen() == null) {
+            return super.onTouchEvent(event);
+        }
+        return getCurrentScreen().onMotionEvent(event);
     }
 }

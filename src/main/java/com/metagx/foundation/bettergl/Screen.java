@@ -1,5 +1,6 @@
 package com.metagx.foundation.bettergl;
 
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 public abstract class Screen {
@@ -29,6 +30,9 @@ public abstract class Screen {
         this.screenHeight = height;
     }
 
+    public boolean onKeyEvent(KeyEvent event) {
+        return false;
+    }
 
     public abstract boolean onMotionEvent(MotionEvent e);
 

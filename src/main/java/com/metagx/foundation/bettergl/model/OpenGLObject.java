@@ -54,17 +54,14 @@ public class OpenGLObject {
         init(glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath, area);
     }
 
-    protected void init(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath, Area area) {
+    public OpenGLObject(Texture texture, GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath, Area area) {
+        init(texture, glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath, area);
+    }
+
+    protected void init(Texture texture, GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath, Area area) {
         this.assetPath = assetPath;
-
+        this.texture = texture;
         this.area = area;
-
-        if(hasTexture()) {
-            this.texture = new Texture(glGame, getAssetPath());
-        } else {
-            this.texture = null;
-        }
-
         this.glWorldWidth = glWorldWidth;
         this.glWorldHeight = glWorldHeight;
         this.width = width;
@@ -77,6 +74,17 @@ public class OpenGLObject {
         setBindableVertices();
 
         motionModelList = new ArrayList<MotionModel>();
+    }
+
+    protected void init(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath, Area area) {
+        this.assetPath = assetPath;
+        if(hasTexture()) {
+            this.texture = new Texture(glGame, getAssetPath());
+        } else {
+            this.texture = null;
+        }
+
+        init(texture, glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath, area);
     };
 
     public Texture getTexture() {
@@ -122,7 +130,7 @@ public class OpenGLObject {
     }
 
     public MotionModel addObject(Area areaBounds) {
-        MotionModel motionModel = new MotionModel(areaBounds, width, height);
+        MotionModel motionModel = new BoundedMotionModel(areaBounds, width, height);
         motionModelList.add(motionModel);
         return motionModel;
     }
@@ -150,6 +158,12 @@ public class OpenGLObject {
         return motionModelList;
     }
 
+    public MotionModel getMotionModel(int index) {
+        return motionModelList.get(index);
+    }
+
+    final List<MotionModel> motionModels = new ArrayList<MotionModel>();
+
     public void draw() {
         GL10 gl = glGraphics.getGL();
 
@@ -158,7 +172,11 @@ public class OpenGLObject {
             gl.glEnable(GL10.GL_TEXTURE_2D);
             getTexture().bind();
         }
-        for(MotionModel motionModel : getMotionModelList()) {
+
+        motionModels.clear();
+        motionModels.addAll(getMotionModelList());
+
+        for(MotionModel motionModel : motionModels) {
             gl.glLoadIdentity();
 
             //+width/2 , +height/2

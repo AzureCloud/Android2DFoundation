@@ -28,7 +28,7 @@ public class OpenGLObjectFactory {
 
             @Override
             public MotionModel addObject(Area area) {
-                MotionModel motionModel = new MotionModel(area, width, height) {
+                MotionModel motionModel = new BoundedMotionModel(area, width, height) {
                     @Override
                     public void update(float delta) {
                         //noop

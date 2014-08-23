@@ -31,9 +31,6 @@ public class MotionModel {
     //Size
     public volatile int width, height;
 
-    //World Bounds
-    protected Area areaBounds;
-
     protected float scaledWidth;
     protected float scaledHeight;
 
@@ -43,26 +40,32 @@ public class MotionModel {
     public static final int UNSET = -1;
     public static final int IRRELEVANT = -9;
 
-    private Integer lastCollisionId = UNSET;
+    protected Integer lastCollisionId = UNSET;
 
-    public MotionModel(Area areaBounds, int width, int height) {
-        this.areaBounds = areaBounds;
+    public MotionModel(float posX, float posY, int width, int height) {
+        this.width = width;
+        this.height = height;
 
+        this.position.set(posX, posY);
+
+        this.scaledWidth = width;
+        this.scaledHeight = height;
+
+        this.bounds = new Rectangle(position.x-width/2, position.y-height/2, width, height);
+    }
+
+    public MotionModel(int width, int height) {
         this.width = width;
         this.height = height;
 
         this.scaledWidth = width;
         this.scaledHeight = height;
 
-        position.set(areaBounds.getAreaBounds().lowerLeft.x + rand.nextFloat() * areaBounds.getAreaBounds().width, areaBounds.getAreaBounds().lowerLeft.y +  rand.nextFloat() * areaBounds.getAreaBounds().height);
-
         this.bounds = new Rectangle(position.x-width/2, position.y-height/2, width, height);
     }
 
     @Deprecated
     public MotionModel(int glWorldWidth, int glWorldHeight, int width, int height, float vx, float vy) {
-        this.areaBounds = null;
-
         this.width = width;
         this.height = height;
 
@@ -74,15 +77,6 @@ public class MotionModel {
         velocity.set(vx, vy);
 
         this.bounds = new Rectangle(position.x-width/2, position.y-height/2, width, height);
-    }
-
-    public void setNewArea(Area areaBounds) {
-        this.areaBounds = areaBounds;
-    }
-
-    public MotionModel(Area areaBounds, int width, int height, float vX, float vY) {
-        this(areaBounds, width, height);
-        velocity.set(vX, vY);
     }
 
     public void collideWith(Vector velocity, int lastCollisionId) {
@@ -123,56 +117,27 @@ public class MotionModel {
         return position;
     }
 
+    public boolean wrapWorld = true;
+
     public void update(float deltaTime) {
         position.add(velocity.x*deltaTime, velocity.y*deltaTime);
 
+        if (wrapWorld) {
+            if (position.x < 0) {
+                position.x = 960 + position.x;
+            } else if (position.x > 960) {
+                position.x = position.x - 960;
+            }
+
+            if (position.y < 0) {
+                position.y = 960 + position.y;
+            } else if (position.y > 640) {
+                position.y = position.y - 640;
+            }
+        }
+
         velocity.add(acceleration);
-
-        bounds.lowerLeft.set(position).sub(bounds.width / 2, bounds.height / 2);
-
-        boolean hitWall = false;
-
-        if (position.x < areaBounds.getAreaBounds().lowerLeft.x + scaledWidth/2) {
-            velocity.x = velocity.x*-1;
-            position.x = areaBounds.getAreaBounds().lowerLeft.x +scaledWidth/2;
-            hitWall = true;
-        } else if (position.x > (areaBounds.getAreaBounds().lowerLeft.x+areaBounds.getAreaBounds().width)-scaledWidth/2) {
-            velocity.x = velocity.x*-1;
-            position.x = (areaBounds.getAreaBounds().lowerLeft.x+areaBounds.getAreaBounds().width)-scaledWidth/2;
-            hitWall = true;
-        }
-
-        if (position.y < areaBounds.getAreaBounds().lowerLeft.y + scaledHeight/2) {
-            velocity.y = velocity.y*-1;
-            position.y = areaBounds.getAreaBounds().lowerLeft.y +scaledHeight/2;
-            hitWall = true;
-        } else if (position.y > (areaBounds.getAreaBounds().lowerLeft.y+areaBounds.getAreaBounds().height)-scaledHeight/2) {
-            velocity.y = velocity.y*-1;
-            position.y = (areaBounds.getAreaBounds().lowerLeft.y+areaBounds.getAreaBounds().height)-scaledHeight/2;
-            hitWall = true;
-        }
-
-        if(hitWall) {
-            lastCollisionId = -1;
-        }
-
-//        if(hitWall) {
-//            vX = vX/2;
-//            if(vX < minimumSpeed && vX > 0) {
-//                vX = minimumSpeed;
-//            } else if(vX > -minimumSpeed && vX < 0) {
-//                vX = -minimumSpeed;
-//            }
-//
-//            vY = vY/2;
-//            if(vY < minimumSpeed && vY > 0) {
-//                vY = minimumSpeed;
-//            } else if(vY > -minimumSpeed && vY < 0) {
-//                vY = -minimumSpeed;
-//            }
-//        }
-
-//        bounds.set(x, (y+height*scaleY),x+width*scaleX, y);
+        bounds.lowerLeft.set(position).sub(scaledWidth / 2, scaledHeight / 2);
     }
 
     public void setScale(float scaleX, float scaleY) {

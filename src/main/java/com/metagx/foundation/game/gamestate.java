@@ -11,4 +11,14 @@ public interface GameState {
     void saveState(Context context);
 
     void loadState(Context context);
-}
+
+    void draw();
+
+    void pause();
+
+    void setupNewLevel();
+
+    void loadAdditionalTextures();
+
+    public void update(float deltaTime);
+    }
