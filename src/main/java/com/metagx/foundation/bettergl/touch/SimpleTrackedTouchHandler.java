@@ -1,10 +1,12 @@
 package com.metagx.foundation.bettergl.touch;
 
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Tracker;
 import com.metagx.foundation.bettergl.GLGame;
+import com.metagx.foundation.bettergl.ui.UIPanels;
 
 /**
  * Simple impl of AbstractTouchHandler for a glGame application with google analytics tracking.
@@ -15,6 +17,7 @@ public class SimpleTrackedTouchHandler implements TouchHandler {
     protected Tracker tracker;
     protected int screenWidth, screenHeight, glWidth, glHeight;
     protected final GLGame glGame;
+    protected UIPanels uiPanels;
 
     public SimpleTrackedTouchHandler(
             GLGame glGame, int screenWidth, int screenHeight, int glWidth, int glHeight) {
@@ -32,4 +35,12 @@ public class SimpleTrackedTouchHandler implements TouchHandler {
 
     @Override
     public void onTap(MotionEvent motionEvent) {} //noop
+
+    @Override
+    public boolean onKeyEvent(KeyEvent keyEvent) { return false; } //noop
+
+    @Override
+    public void setUiPanels(UIPanels uiPanels) {
+        this.uiPanels = uiPanels;
+    }
 }

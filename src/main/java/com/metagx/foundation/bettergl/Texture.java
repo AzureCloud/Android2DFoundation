@@ -17,9 +17,9 @@ public class Texture {
     int minFilter;
     int magFilter;    
     
-    public Texture(GLGame glGame, String fileName) {
-        this.glGraphics = glGame.getGLGraphics();
-        this.fileIO = glGame.getFileIO();
+    public Texture(GLGraphics glGraphics, FileIO fileIO, String fileName) {
+        this.glGraphics = glGraphics;
+        this.fileIO = fileIO;
         this.fileName = fileName;
         load();
     }

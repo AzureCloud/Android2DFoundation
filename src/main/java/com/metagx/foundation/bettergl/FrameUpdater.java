@@ -5,4 +5,8 @@ package com.metagx.foundation.bettergl;
  */
 public interface FrameUpdater {
     void update(float deltaTime);
+
+    void pause();
+
+    void unpause();
 }

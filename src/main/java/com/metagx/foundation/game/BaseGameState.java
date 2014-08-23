@@ -22,15 +22,15 @@ public abstract class BaseGameState implements GameState {
 
     private static final String BaseGameStateOpenGlObjectsKey = "baseGameStateOpenGlObjectsKey";
 
-    private GLBackground background;
+    protected GLBackground background;
     public final ArrayList<OpenGLObject> openGLObjects = new ArrayList<OpenGLObject>();
 
     protected GLGraphics glGraphics;
     protected int glWidth, glHeight;
 
-    protected OpenGLObjectFactory openGLObjectFactory;
-
-    public BaseGameState(GLGraphics glGraphics, int glWidth, int glHeight) {
+    public BaseGameState(GLGraphics glGraphics,
+                         int glWidth,
+                         int glHeight) {
         this.glGraphics = glGraphics;
         this.glWidth = glWidth;
         this.glHeight = glHeight;
@@ -38,6 +38,11 @@ public abstract class BaseGameState implements GameState {
 
     public void setBackground(GLBackground background) {
         this.background = background;
+        this.background.init(glGraphics, glWidth, glHeight);
+    }
+
+    public GLBackground getBackground() {
+        return background;
     }
 
     public void addOpenGlObject(OpenGLObject openGLObject) {
@@ -52,12 +57,13 @@ public abstract class BaseGameState implements GameState {
         }
     }
 
-    public OpenGLObjectFactory getOpenGLObjectFactory() {
-        return openGLObjectFactory;
-    }
+    public abstract OpenGLObjectFactory getOpenGLObjectFactory();
 
     @Override
     public void update(float deltaTime) {
+        if (background != null) {
+            background.update(deltaTime);
+        }
         synchronized (openGLObjects) {
             for(int i=0 ; i < openGLObjects.size() ; i++) {
                 OpenGLObject openGLObject = openGLObjects.get(i);
@@ -70,6 +76,11 @@ public abstract class BaseGameState implements GameState {
     }
 
     @Override
+    public void pause() {
+        loadedTextures = false;
+    }
+
+    @Override
     public void saveState(Context context) {
 
     }
@@ -79,7 +90,7 @@ public abstract class BaseGameState implements GameState {
 
     }
 
-    public void pause() {
+    public void reloadTextures() {
         loadedTextures = false;
     }
 
@@ -109,6 +120,12 @@ public abstract class BaseGameState implements GameState {
         }
 
         background.draw();
+        synchronized (openGLObjects) {
+            for (OpenGLObject object : openGLObjects) {
+                object.draw();
+            }
+        }
+
     }
 
     protected JSONObject buildState() throws JSONException {

@@ -6,5 +6,9 @@ package com.metagx.foundation.bettergl;
 public interface GLBackground {
     void draw();
 
+    void update(float delta);
+
     Texture getTexture();
+
+    public void init(GLGraphics glGraphics, int width, int height);
 }

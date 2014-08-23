@@ -1,11 +1,22 @@
 package com.metagx.foundation.bettergl;
 
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
+import com.metagx.foundation.bettergl.level.LevelConfig;
+import com.metagx.foundation.bettergl.model.area.Area;
 import com.metagx.foundation.bettergl.touch.TouchHandler;
+import com.metagx.foundation.bettergl.ui.UIPanels;
 import com.metagx.foundation.game.BaseGameState;
 import com.metagx.foundation.game.GameState;
+
+import java.util.logging.Level;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -22,13 +33,19 @@ public abstract class Screen2D extends Screen {
     protected GLGraphics glGraphics;
     protected FPSCounter fpsCounter;
 
-    protected BaseGameState gameState;
-
     protected abstract FrameUpdater createFrameUpdater();
 
     protected abstract void onResumeChrome();
 
+    protected abstract LevelConfig getLevelConfig();
+
+    protected abstract GameState getGameState();
+
     protected abstract void setupLevel();
+
+    protected abstract UIPanels getUiPanels();
+
+    protected abstract void clearUIPanels();
 
     public Screen2D(GLGame game, int glWidth, int glHeight) {
         super(game, glWidth, glHeight);
@@ -113,13 +130,21 @@ public abstract class Screen2D extends Screen {
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
-        gameState.draw();
+        getGameState().draw();
 
         fpsCounter.logFrame();
     }
 
     @Override
     public synchronized void pause() {
+        clearUIPanels();
+        touchHandler.setUiPanels(null);
         gestureDetector = null;
+        getGameState().pause();
+    }
+
+    @Override
+    public boolean onKeyEvent(KeyEvent event) {
+        return touchHandler.onKeyEvent(event);
     }
 }

@@ -1,7 +1,19 @@
 package com.metagx.foundation.bettergl.level;
 
+import com.metagx.foundation.bettergl.GLBackground;
+
 /**
- * Created by Adam on 8/23/14.
+ * Basic interface for level configuration
  */
-public class LevelConfig {
+public interface LevelConfig {
+
+    GLBackground getBackground();
+
+    public LevelConfig getNextLevel();
+
+    public boolean isFinalLevel();
+
+    public int getLevelNumber();
+
+    int getLiveCount();
 }

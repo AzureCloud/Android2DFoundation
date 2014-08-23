@@ -58,6 +58,10 @@ public class OpenGLObject {
         init(texture, glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath, area);
     }
 
+    public OpenGLObject(Texture texture, GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath) {
+        init(texture, glGame, glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath, null);
+    }
+
     protected void init(Texture texture, GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath, Area area) {
         this.assetPath = assetPath;
         this.texture = texture;
@@ -79,7 +83,7 @@ public class OpenGLObject {
     protected void init(GLGame glGame, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath, Area area) {
         this.assetPath = assetPath;
         if(hasTexture()) {
-            this.texture = new Texture(glGame, getAssetPath());
+            this.texture = new Texture(glGame.getGLGraphics(), glGame.getFileIO(), getAssetPath());
         } else {
             this.texture = null;
         }
@@ -127,6 +131,14 @@ public class OpenGLObject {
                 width/2,  height/2, 1, 0,
                 -width/2, height/2, 0, 0, }, 0, 16);
         bindableVertices.setIndices(new short[] {0, 1, 2, 2, 3, 0}, 0, 6);
+    }
+
+    public MotionModel addObject() {
+        MotionModel motionModel = new BoundedMotionModel(
+                new Area(glGraphics, glWorldWidth/2, glWorldHeight/2, glWorldWidth, glWorldHeight),
+                width, height);
+        motionModelList.add(motionModel);
+        return motionModel;
     }
 
     public MotionModel addObject(Area areaBounds) {
