@@ -1,9 +1,11 @@
 package com.metagx.foundation.bettergl.model;
 
 import com.metagx.foundation.bettergl.BindableVertices;
+import com.metagx.foundation.bettergl.FileIO;
 import com.metagx.foundation.bettergl.GLGame;
 import com.metagx.foundation.bettergl.GLGraphics;
 import com.metagx.foundation.bettergl.Texture;
+import com.metagx.foundation.bettergl.model.area.Area;
 import com.metagx.foundation.exception.SuperClassDidNotImplementException;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -21,10 +23,14 @@ public class OpenGLSingleObject {
 
     private volatile String assetPath;
 
-    public MotionModel model;
+    public BoundedMotionModel model;
 
     public OpenGLSingleObject(Texture texture, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath) {
         init(texture, glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath);
+    }
+
+    public OpenGLSingleObject(FileIO fileIO, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath) {
+        init(new Texture(glGraphics, fileIO, assetPath), glGraphics, glWorldWidth, glWorldHeight, width, height, assetPath);
     }
 
     protected void init(Texture texture, GLGraphics glGraphics, int glWorldWidth, int glWorldHeight, int width, int height, String assetPath) {
@@ -39,7 +45,8 @@ public class OpenGLSingleObject {
 
         setBindableVertices();
 
-        model = new MotionModel(width, height);
+        model = new BoundedMotionModel(width, height, glWorldWidth, glWorldHeight, false);
+        model.wrapWorld = false;
     }
 
     public Texture getTexture() {

@@ -34,17 +34,29 @@ public class MotionModel {
     protected float scaledWidth;
     protected float scaledHeight;
 
+    protected final float glWidth, glHeight;
+
     //Bounds
     public Rectangle bounds;
+    public boolean wrapWorld = true;
 
     public static final int UNSET = -1;
     public static final int IRRELEVANT = -9;
 
+    private OnUpdateListener onUpdateListener;
+
     protected Integer lastCollisionId = UNSET;
 
-    public MotionModel(float posX, float posY, int width, int height) {
+    public void setOnUpdateListener(OnUpdateListener onUpdateListener) {
+        this.onUpdateListener = onUpdateListener;
+    }
+
+    public MotionModel(float posX, float posY, int width, int height, float glWidth, float glHeight) {
         this.width = width;
         this.height = height;
+
+        this.glWidth = glWidth;
+        this.glHeight = glHeight;
 
         this.position.set(posX, posY);
 
@@ -54,12 +66,15 @@ public class MotionModel {
         this.bounds = new Rectangle(position.x-width/2, position.y-height/2, width, height);
     }
 
-    public MotionModel(int width, int height) {
+    public MotionModel(int width, int height, float glWidth, float glHeight) {
         this.width = width;
         this.height = height;
 
         this.scaledWidth = width;
         this.scaledHeight = height;
+
+        this.glWidth = glWidth;
+        this.glHeight = glHeight;
 
         this.bounds = new Rectangle(position.x-width/2, position.y-height/2, width, height);
     }
@@ -71,6 +86,9 @@ public class MotionModel {
 
         this.scaledWidth = width;
         this.scaledHeight = height;
+
+        this.glWidth = glWorldWidth;
+        this.glHeight = glWorldHeight;
 
         position.set(rand.nextFloat() * glWorldWidth, rand.nextFloat() * glWorldHeight);
 
@@ -117,28 +135,35 @@ public class MotionModel {
         return position;
     }
 
-    public boolean wrapWorld = true;
-
     public void update(float deltaTime) {
         position.add(velocity.x*deltaTime, velocity.y*deltaTime);
 
         if (wrapWorld) {
             if (position.x < 0) {
-                position.x = 960 + position.x;
-            } else if (position.x > 960) {
-                position.x = position.x - 960;
+                position.x = glWidth + position.x;
+            } else if (position.x > glWidth) {
+                position.x = position.x - glWidth;
             }
 
             if (position.y < 0) {
-                position.y = 960 + position.y;
-            } else if (position.y > 640) {
-                position.y = position.y - 640;
+                position.y = glHeight + position.y;
+            } else if (position.y > glHeight) {
+                position.y = position.y - glHeight;
             }
         }
 
         velocity.add(acceleration);
         bounds.lowerLeft.set(position).sub(scaledWidth / 2, scaledHeight / 2);
+
+
+        if (onUpdateListener != null) {
+            onUpdateListener.onUpdate(this, deltaTime);
+        }
     }
+
+//    public boolean outOfBounds() {
+//        return position.x < 0 || position.x > glWidth || position.y < 0 || position.y > glHeight;
+//    }
 
     public void setScale(float scaleX, float scaleY) {
         this.scaleX = scaleX;

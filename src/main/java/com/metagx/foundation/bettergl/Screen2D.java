@@ -33,6 +33,8 @@ public abstract class Screen2D extends Screen {
     protected GLGraphics glGraphics;
     protected FPSCounter fpsCounter;
 
+    private float screenToGLWidthRatio, screenToGLHeightRatio;
+
     protected abstract FrameUpdater createFrameUpdater();
 
     protected abstract void onResumeChrome();
@@ -75,8 +77,11 @@ public abstract class Screen2D extends Screen {
     }
 
     @Override
-    public void setScreenBounds(int width, int height) {
-        super.setScreenBounds(width, height);
+    public void setScreenBounds(int screenWidth, int screenHeight) {
+        super.setScreenBounds(screenWidth, screenHeight);
+
+        screenToGLWidthRatio = glWidth / (float)screenWidth;
+        screenToGLHeightRatio = glHeight / (float)screenHeight;
 
         initVertices(screenWidth, screenHeight);
         initialized = true;
@@ -86,6 +91,14 @@ public abstract class Screen2D extends Screen {
     public boolean onMotionEvent(MotionEvent event) {
         if(gestureDetector == null) {
             return false;
+        }
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_UP:
+                touchHandler.onTouchUp(event.getX() * screenToGLWidthRatio, event.getY() * screenToGLHeightRatio);
+                break;
+            case MotionEvent.ACTION_DOWN:
+                touchHandler.onTouchDown(event.getX() * screenToGLWidthRatio, event.getY() * screenToGLHeightRatio);
+                break;
         }
         return gestureDetector.onTouchEvent(event);
     }
@@ -97,6 +110,17 @@ public abstract class Screen2D extends Screen {
                 touchHandler.onFling(motionEvent, motionEvent2);
                 return false;
             }
+
+            public boolean onSingleTapUp(android.view.MotionEvent event) {
+                touchHandler.onTap(event.getX(), event.getY());
+                return false;
+            }
+
+            public boolean onScroll(android.view.MotionEvent e1, android.view.MotionEvent e2, float distanceX, float distanceY) {
+                touchHandler.onDrag(e1, e2, distanceX, distanceY);
+                return false;
+            }
+
         });
     }
 
@@ -140,6 +164,9 @@ public abstract class Screen2D extends Screen {
         clearUIPanels();
         touchHandler.setUiPanels(null);
         gestureDetector = null;
+    }
+
+    public void reloadTextures() {
         getGameState().pause();
     }
 

@@ -1,7 +1,5 @@
 package com.metagx.foundation.log;
 
-import java.util.Objects;
-
 /**
  * Created by Adam on 8/23/14.
  */

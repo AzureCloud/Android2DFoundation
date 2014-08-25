@@ -133,9 +133,15 @@ public class OpenGLObject {
         bindableVertices.setIndices(new short[] {0, 1, 2, 2, 3, 0}, 0, 6);
     }
 
+    public MotionModel addUnboundedObject() {
+        MotionModel motionModel = new MotionModel(width, height, glWorldWidth, glWorldHeight);
+        motionModelList.add(motionModel);
+        return motionModel;
+    }
+
     public MotionModel addObject() {
         MotionModel motionModel = new BoundedMotionModel(
-                new Area(glGraphics, glWorldWidth/2, glWorldHeight/2, glWorldWidth, glWorldHeight),
+                new Area(glWorldWidth/2, glWorldHeight/2, glWorldWidth, glWorldHeight),
                 width, height);
         motionModelList.add(motionModel);
         return motionModel;

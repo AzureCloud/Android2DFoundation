@@ -12,9 +12,15 @@ public interface TouchHandler {
 
     void onFling(MotionEvent motionEvent, MotionEvent motionEvent2);
 
-    void onTap(MotionEvent motionEvent);
+    void onTap(float x, float y);
+
+    void onTouchDown(float x, float y);
+
+    void onTouchUp(float x, float y);
 
     boolean onKeyEvent(KeyEvent keyEvent);
 
     void setUiPanels(UIPanels uiPanels);
+
+    void onDrag(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY);
 }

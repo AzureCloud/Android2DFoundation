@@ -1,9 +1,11 @@
 package com.metagx.foundation.bettergl;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -32,20 +34,30 @@ public abstract class GLGame extends Activity implements Game, Renderer {
     Object stateChanged = new Object();
     long startTime = System.nanoTime();
     WakeLock wakeLock;
-    
-    @Override 
+
+    private int screenWidth = -1, screenHeight = -1;
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        superFullScreen();
+
         setupContentView();
-        
+
         glGraphics = new GLGraphics(glView);
         fileIO = new AndroidFileIO(getAssets());
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");        
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "GLGame");
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    protected void superFullScreen() {
+        // This flag is only available in API level 14 and later.
+        getWindow().getDecorView().setSystemUiVisibility(0x8);
     }
 
     protected void setupContentView() {
@@ -56,8 +68,7 @@ public abstract class GLGame extends Activity implements Game, Renderer {
 
     public void onResume() {
         super.onResume();
-        glView.onResume();
-        wakeLock.acquire();
+        resumeGame();
     }
     
     @Override
@@ -73,7 +84,34 @@ public abstract class GLGame extends Activity implements Game, Renderer {
 //        }
     }
 
-    private int screenWidth = -1, screenHeight = -1;
+    public void pauseGame() {
+        synchronized(stateChanged) {
+            if(isFinishing())
+                state = GLGameState.Finished;
+            else
+                state = GLGameState.Paused;
+            while(true) {
+                try {
+                    stateChanged.wait();
+                    break;
+                } catch(InterruptedException e) {
+                }
+            }
+        }
+        wakeLock.release();
+        glView.onPause();
+        if (getCurrentScreen() != null) {
+            getCurrentScreen().dispose();
+        }
+    }
+
+    public void resumeGame() {
+        glView.onResume();
+        wakeLock.acquire();
+        if (getCurrentScreen() != null) {
+            getCurrentScreen().reloadTextures();
+        }
+    }
     
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -135,22 +173,8 @@ public abstract class GLGame extends Activity implements Game, Renderer {
     }   
     
     @Override 
-    public void onPause() {        
-        synchronized(stateChanged) {
-            if(isFinishing())            
-                state = GLGameState.Finished;
-            else
-                state = GLGameState.Paused;
-            while(true) {
-                try {
-                    stateChanged.wait();
-                    break;
-                } catch(InterruptedException e) {         
-                }
-            }
-        }
-        wakeLock.release();
-        glView.onPause();  
+    public void onPause() {
+        pauseGame();
         super.onPause();
     }    
     
@@ -163,6 +187,12 @@ public abstract class GLGame extends Activity implements Game, Renderer {
         return fileIO;
     }
 
+
+    public void quit(View unused) {
+        finish();
+    }
+
+    public abstract void pauseMenu(View unused);
 
     @Override
     public void setScreen(Screen screen) {

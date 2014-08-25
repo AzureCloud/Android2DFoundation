@@ -31,16 +31,27 @@ public class SimpleTrackedTouchHandler implements TouchHandler {
     }
 
     @Override
-    public void onFling(MotionEvent motionEvent, MotionEvent motionEvent2) {} //noop
+    public void onFling(MotionEvent motionEvent, MotionEvent motionEvent2) {} // noop
 
     @Override
-    public void onTap(MotionEvent motionEvent) {} //noop
+    public void onTap(float x, float y) {} // noop
 
     @Override
-    public boolean onKeyEvent(KeyEvent keyEvent) { return false; } //noop
+    public void onTouchDown(float x, float y) {} // noop
+
+    @Override
+    public void onTouchUp(float x, float y) {} // noop
+
+    @Override
+    public boolean onKeyEvent(KeyEvent keyEvent) { return false; } // noop
 
     @Override
     public void setUiPanels(UIPanels uiPanels) {
         this.uiPanels = uiPanels;
+    }
+
+    @Override
+    public void onDrag(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY) {
+        // noop
     }
 }

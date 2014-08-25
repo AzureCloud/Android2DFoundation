@@ -36,9 +36,12 @@ public abstract class BaseGameState implements GameState {
         this.glHeight = glHeight;
     }
 
+    protected abstract void drawAdditionalObjects();
+    protected abstract void updateAdditionalObjects(float deltaTime);
+
     public void setBackground(GLBackground background) {
         this.background = background;
-        this.background.init(glGraphics, glWidth, glHeight);
+        this.background.init(getOpenGLObjectFactory());
     }
 
     public GLBackground getBackground() {
@@ -54,6 +57,12 @@ public abstract class BaseGameState implements GameState {
     public void removeOpenGlObject(OpenGLObject openGLObject) {
         synchronized (openGLObjects) {
             openGLObjects.remove(openGLObject);
+        }
+    }
+
+    public void clearOpenGlObjects() {
+        synchronized (openGLObjects) {
+            openGLObjects.clear();
         }
     }
 
@@ -73,6 +82,7 @@ public abstract class BaseGameState implements GameState {
                 }
             }
         }
+        updateAdditionalObjects(deltaTime);
     }
 
     @Override
@@ -115,17 +125,18 @@ public abstract class BaseGameState implements GameState {
                     }
                 }
             }
-            background.getTexture().reload();
+            background.reloadTextures();
+            loadAdditionalTextures();
             loadedTextures = true;
         }
-
-        background.draw();
+        glGraphics.getGL().glClearColor(0, 0, 0, 0);
+        background.draw(glGraphics.getGL());
         synchronized (openGLObjects) {
             for (OpenGLObject object : openGLObjects) {
                 object.draw();
             }
         }
-
+        drawAdditionalObjects();
     }
 
     protected JSONObject buildState() throws JSONException {
@@ -142,4 +153,20 @@ public abstract class BaseGameState implements GameState {
 
         return jsonObject;
     }
+
+    public void dispose() {
+        synchronized (openGLObjects) {
+            for (OpenGLObject object : openGLObjects) {
+                if (object.hasTexture()) {
+                    object.getTexture().dispose();
+                }
+            }
+        }
+        background.dispose();
+        disposeAdditionalTextures();
+    }
+
+    protected abstract void disposeAdditionalTextures();
+
+
 }

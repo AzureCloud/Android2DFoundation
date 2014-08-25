@@ -9,4 +9,6 @@ public interface UIPanels {
     void updateLives(int lives);
 
     void updateScore(int score);
+
+    void openPauseMenu();
 }

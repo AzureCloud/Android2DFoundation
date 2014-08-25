@@ -33,7 +33,7 @@ public class AreaTest {
         float centerY = 20;
         float width = 20;
         float height = 20;
-        Area area = new Area(glGraphics, centerX, centerY, width, height);
+        Area area = new Area(centerX, centerY, width, height);
 
         Vector splitPosition = new Vector(15, 15);
         /*
@@ -78,7 +78,7 @@ public class AreaTest {
         float centerY = 20;
         float width = 20;
         float height = 20;
-        Area area = new Area(glGraphics, centerX, centerY, width, height);
+        Area area = new Area(centerX, centerY, width, height);
 
         Vector splitPosition = new Vector(15, 15);
         /*
@@ -151,7 +151,7 @@ public class AreaTest {
         float centerY = 20;
         float width = 20;
         float height = 20;
-        Area area = new Area(glGraphics, centerX, centerY, width, height);
+        Area area = new Area(centerX, centerY, width, height);
 
         Vector splitPosition = new Vector(15, 15);
         /*
@@ -212,7 +212,7 @@ public class AreaTest {
             0,0    20,0
          */
 
-        Area area = new Area(glGraphics, centerX, centerY, width, height);
+        Area area = new Area(centerX, centerY, width, height);
 
         assertTrue(area.areaBounds.lowerLeft.x == 0);
         assertTrue(area.areaBounds.lowerLeft.y == 0);
